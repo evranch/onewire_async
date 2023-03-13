@@ -37,6 +37,9 @@ public:
     bool readC_async();
     String tempString();
     String emaString();
+    String addressString();
+private:
+    bool available();
 };
 
 #ifndef EVR_UTILS_H

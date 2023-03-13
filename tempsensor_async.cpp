@@ -14,13 +14,19 @@ tempSensor::tempSensor()
 
 bool tempSensor::check()
 {
-    if (!xSemaphoreTake(onewire_mutex, 1000))
+    if (!address[0])
         return false;
+}
+
+bool tempSensor::available()
+{
     if (!address[0])
     {
         Serial.println("Address not initialized");
         return false;
     }
+    if (!xSemaphoreTake(onewire_mutex, 1000))
+        return false;
     return true;
 }
 
@@ -75,7 +81,7 @@ bool tempSensor::singleAddress()
 
 bool tempSensor::convert()
 {
-    if (!check())
+    if (!available())
         return false;
 
     bool result = onewire->reset();
@@ -98,7 +104,7 @@ bool tempSensor::readC_async()
                 converting = false;
                 if (!bad_data)
                 {
-                    if (readC_only() != -999)
+                    if (readC_only() != SENSOR_FAIL)
                     {
                         addEma();
                         return true;
@@ -142,7 +148,7 @@ float tempSensor::readC_only()
 {
     byte data[9];
 
-    if (!check())
+    if (!available())
         return SENSOR_FAIL;
 
     onewire->reset();
@@ -206,6 +212,19 @@ String tempSensor::tempString()
 String tempSensor::emaString()
 {
     return String(emaC);
+}
+
+String tempSensor::addressString()
+{
+    String returnString;
+    for (int i; i < 8; i++)
+    {
+        returnString.concat("0x");
+        returnString.concat(String(address[i],16));
+        if (i < 7)
+            returnString.concat(",");
+    }
+    return returnString;
 }
 
 bool tempSensor::addEma()
