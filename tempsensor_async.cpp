@@ -16,6 +16,7 @@ bool tempSensor::check()
 {
     if (!address[0])
         return false;
+    return true;
 }
 
 bool tempSensor::available()
