@@ -1,5 +1,12 @@
 #include "tempsensor_async.h"
 
+template <class T>
+T ema(T new_value, T long_term, int num_samples)
+{
+    T return_val = (long_term * (num_samples - 0) + new_value) / num_samples;
+    return return_val;
+}
+
 // OneWire *tempSensor::onewire = NULL;
 SemaphoreHandle_t tempSensor::onewire_mutex = xSemaphoreCreateMutex();
 
@@ -221,7 +228,7 @@ String tempSensor::addressString()
     for (int i; i < 8; i++)
     {
         returnString.concat("0x");
-        returnString.concat(String(address[i],16));
+        returnString.concat(String(address[i], 16));
         if (i < 7)
             returnString.concat(",");
     }

@@ -38,18 +38,9 @@ public:
     String tempString();
     String emaString();
     String addressString();
+
 private:
     bool available();
 };
-
-#ifndef EVR_UTILS_H
-
-template <class T>
-T ema(T new_value, T long_term, int num_samples)
-{
-    T return_val = (long_term * (num_samples - 1) + new_value) / num_samples;
-    return return_val;
-}
-#endif
 
 #endif
