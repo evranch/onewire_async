@@ -19,9 +19,13 @@ tempSensor::tempSensor()
 {
 }
 
-bool tempSensor::check()
+// Check if address is uninitialized or sensor has not successfully been read
+// Default failure time 1 minute
+bool tempSensor::check(int unread_time)
 {
     if (!address[0])
+        return false;
+    if (millis() - last_good_read > unread_time * 1000UL)
         return false;
     return true;
 }
@@ -115,6 +119,7 @@ bool tempSensor::readC_async()
                     if (readC_only() != SENSOR_FAIL)
                     {
                         addEma();
+                        last_good_read = millis();
                         return true;
                     }
                 }

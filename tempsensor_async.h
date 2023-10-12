@@ -21,7 +21,8 @@ public:
     int ema_samples = 0;
     bool converting = 0, conversion_done = 0;
     bool bad_data = false;
-    long conversion_timer = 0;
+    unsigned long conversion_timer = 0;
+    unsigned long last_good_read = 0;
     tempSensor(OneWire *device);
     tempSensor();
     void setDevice(OneWire *device);
@@ -31,7 +32,7 @@ public:
     bool addEma(float new_val);
     bool addEma();
     bool convert();
-    bool check();
+    bool check(int unread_time = 60);
     float readC();
     float readC_only();
     bool readC_async();
